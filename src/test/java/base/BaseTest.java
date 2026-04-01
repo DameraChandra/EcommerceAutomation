@@ -4,13 +4,12 @@ import java.lang.reflect.Method;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.testng.ITestResult;
 import org.testng.annotations.*;
 
-import utilities.ScreenshotUtil;
-import utilities.ExtentManager;
+import com.aventstack.extentreports.ExtentReports;
+import com.aventstack.extentreports.ExtentTest;
 
-import com.aventstack.extentreports.*;
+import utilities.ExtentManager;
 
 public class BaseTest {
 
@@ -18,57 +17,36 @@ public class BaseTest {
     public ExtentReports extent;
     public ExtentTest test;
 
+    // 🔹 Start Extent Report
     @BeforeSuite
-    public void startReport() {
-        System.out.println("Report started");
-        extent = ExtentManager.getReport();
+    public void setupReport() {
+        extent = ExtentManager.getReportInstance();
     }
 
+    // 🔹 Launch Browser + Create Test
     @BeforeMethod
     public void setup(Method method) {
 
-        System.out.println("Browser launching");
-
-        driver = new ChromeDriver();
-
-        driver.get("https://demowebshop.tricentis.com/");
-        driver.manage().window().maximize();
-
+        // Create test in report
         test = extent.createTest(method.getName());
+
+        // Launch browser
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        driver.get("https://www.amazon.in"); // change URL if needed
     }
 
+    // 🔹 Close Browser
     @AfterMethod
-    public void tearDown(ITestResult result) {
-
-        if (result.getStatus() == ITestResult.FAILURE) {
-
-            test.fail(result.getThrowable());
-
-            String path = ScreenshotUtil.captureScreenshot(driver, result.getName());
-
-            try {
-                test.addScreenCaptureFromPath(path);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-
-        } else if (result.getStatus() == ITestResult.SUCCESS) {
-
-            test.pass("Test Passed");
-
-        } else {
-
-            test.skip("Test Skipped");
-        }
-
+    public void tearDown() {
         if (driver != null) {
             driver.quit();
         }
     }
 
+    // 🔹 Flush Report
     @AfterSuite
-    public void endReport() {
-        System.out.println("Report generated");
+    public void tearDownReport() {
         extent.flush();
     }
 }
