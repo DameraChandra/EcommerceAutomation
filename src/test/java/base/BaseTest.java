@@ -14,39 +14,43 @@ import utilities.ExtentManager;
 public class BaseTest {
 
     public WebDriver driver;
-    public ExtentReports extent;
-    public ExtentTest test;
 
-    // 🔹 Start Extent Report
-    @BeforeSuite
+    // 🔥 MAKE STATIC (IMPORTANT FIX)
+    public static ExtentReports extent;
+    public static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
+
+    // 🔹 Run once before all tests
+    @BeforeSuite(alwaysRun = true)
     public void setupReport() {
         extent = ExtentManager.getReportInstance();
     }
 
-    // 🔹 Launch Browser + Create Test
-    @BeforeMethod
+    // 🔹 Before each test
+    @BeforeMethod(alwaysRun = true)
     public void setup(Method method) {
 
-        // Create test in report
-        test = extent.createTest(method.getName());
+        // Create test
+        test.set(extent.createTest(method.getName()));
 
         // Launch browser
         driver = new ChromeDriver();
         driver.manage().window().maximize();
-        driver.get("https://www.amazon.in"); // change URL if needed
+        driver.get("https://www.amazon.in"); // change if needed
     }
 
-    // 🔹 Close Browser
-    @AfterMethod
+    // 🔹 After each test
+    @AfterMethod(alwaysRun = true)
     public void tearDown() {
         if (driver != null) {
             driver.quit();
         }
     }
 
-    // 🔹 Flush Report
-    @AfterSuite
+    // 🔹 After all tests
+    @AfterSuite(alwaysRun = true)
     public void tearDownReport() {
-        extent.flush();
+        if (extent != null) {
+            extent.flush();
+        }
     }
 }

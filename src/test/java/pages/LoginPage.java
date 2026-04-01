@@ -1,54 +1,46 @@
 package pages;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
-
-// ✅ Imports for WAIT
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.time.Duration;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class LoginPage {
 
     WebDriver driver;
     WebDriverWait wait;
 
-    @FindBy(linkText = "Log in")
-    WebElement loginLink;
-
-    @FindBy(id = "Email")
-    WebElement email;
-
-    @FindBy(id = "Password")
-    WebElement password;
-
-    @FindBy(xpath = "//input[@value='Log in']")
-    WebElement loginBtn;
-
-    // ✅ Constructor
-    public LoginPage(WebDriver driver){
+    // Constructor
+    public LoginPage(WebDriver driver) {
         this.driver = driver;
-        PageFactory.initElements(driver, this);
-
-        // Initialize wait
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
     }
 
-    // ✅ Login Method with Explicit Wait
-    public void login(String user, String pass){
+    // Locators (UPDATED - FIXED)
+    By signInBtn = By.id("nav-link-accountList");  // Amazon login button
+    By emailField = By.id("ap_email");
+    By continueBtn = By.id("continue");
+    By passwordField = By.id("ap_password");
+    By loginBtn = By.id("signInSubmit");
 
-        // Wait for Login link and click
-        wait.until(ExpectedConditions.elementToBeClickable(loginLink)).click();
+    // Login Method
+    public void login(String username, String password) {
 
-        // Wait for Email field
-        wait.until(ExpectedConditions.visibilityOf(email)).sendKeys(user);
+        // Click Sign In
+        wait.until(ExpectedConditions.elementToBeClickable(signInBtn)).click();
 
-        // Enter password
-        password.sendKeys(pass);
+        // Enter Email
+        wait.until(ExpectedConditions.visibilityOfElementLocated(emailField)).sendKeys(username);
 
-        // Click login button
-        loginBtn.click();
+        // Click Continue
+        wait.until(ExpectedConditions.elementToBeClickable(continueBtn)).click();
+
+        // Enter Password
+        wait.until(ExpectedConditions.visibilityOfElementLocated(passwordField)).sendKeys(password);
+
+        // Click Login
+        wait.until(ExpectedConditions.elementToBeClickable(loginBtn)).click();
     }
 }
