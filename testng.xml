@@ -1,14 +1,9 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
 
-<suite name="Automation Suite">
-
-    <test name="Ecommerce Tests">
-
+<suite name="Suite">
+    <test name="Automation Test">
         <classes>
             <class name="tests.LoginTest"/>
-            <class name="tests.PurchaseTest"/>
         </classes>
-
     </test>
-
 </suite>

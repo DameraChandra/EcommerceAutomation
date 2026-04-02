@@ -5,8 +5,6 @@
     <classes>
       <class name="tests.PurchaseTest">
         <methods>
-          <include name="setup"/>
-          <include name="tearDown"/>
           <include name="testAddToCart"/>
         </methods>
       </class> <!-- tests.PurchaseTest -->

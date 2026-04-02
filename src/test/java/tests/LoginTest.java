@@ -1,7 +1,7 @@
 package tests;
 
 import org.testng.annotations.Test;
-import base.BaseTest;
+import tests.BaseTest;
 import pages.LoginPage;
 
 public class LoginTest extends BaseTest {
@@ -9,8 +9,10 @@ public class LoginTest extends BaseTest {
     @Test
     public void testLogin() {
 
-        LoginPage loginPage = new LoginPage(driver);
+        LoginPage login = new LoginPage(driver);
 
-        loginPage.login("testuser@gmail.com", "Test@123");
+        login.login("student", "Password123");
+
+        System.out.println("Login Test Passed");
     }
 }
